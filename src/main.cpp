@@ -2,24 +2,32 @@
 #include "display.h"
 #include "common.h"
 
-
 #define LED 2
-#define BUTTON 4
+
+#define BUTTON_YEL 4
+#define BUTTON_RED 15
+
 #define GLOBAL_DELAY 20
+
 #define RESET_COUNTER_VALUE 150
 
 int counter = 0;
 int resetCounter = 0;
-bool lastButtonState = HIGH;
+
+bool lastYelButtonState = HIGH;
+bool lastRedButtonState = HIGH;
 
 
 void setup() {
+    // Init Serial.
     Serial.begin(115200);
     while (!Serial) { ; }
     delay(1000);
     
     pinMode(LED, OUTPUT);
-    pinMode(BUTTON, INPUT_PULLUP);
+
+    pinMode(BUTTON_YEL, INPUT_PULLUP);
+    pinMode(BUTTON_RED, INPUT_PULLUP);
     
     Serial.println("Starting...");
     
@@ -33,18 +41,31 @@ void setup() {
 }
 
 void loop() {
-    bool currentButtonState = digitalRead(BUTTON);
+    bool currentYelButtonState = digitalRead(BUTTON_YEL);
+    bool currentRedButtonState = digitalRead(BUTTON_RED);
     
-    if (lastButtonState == HIGH && currentButtonState == LOW) {
+    // Increase counter.
+    if (lastYelButtonState == HIGH && currentYelButtonState == LOW) {
         counter++;
         digitalWrite(LED, HIGH);
         showCounter(counter);
     }
-    else if (lastButtonState == LOW && currentButtonState == HIGH) {
+    else if (lastYelButtonState == LOW && currentYelButtonState == HIGH) {
         digitalWrite(LED, LOW);
     }
 
-    if (currentButtonState == LOW) {
+    // Decrease counter.
+    if (lastRedButtonState == HIGH && currentRedButtonState == LOW) {
+        counter--;
+        digitalWrite(LED, HIGH);
+        showCounter(counter);
+    }
+    else if (lastRedButtonState == LOW && currentRedButtonState == HIGH) {
+        digitalWrite(LED, LOW);
+    }
+
+    // Reset counter.
+    if (currentYelButtonState == LOW && currentRedButtonState == LOW) {
         resetCounter++;
     }
     else {
@@ -57,7 +78,9 @@ void loop() {
         showCounter(counter);
     }
     
-    lastButtonState = currentButtonState;
+    lastYelButtonState = currentYelButtonState;
+    lastRedButtonState = currentRedButtonState;
+
     delay(GLOBAL_DELAY);
 }
 
