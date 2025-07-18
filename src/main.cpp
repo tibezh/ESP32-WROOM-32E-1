@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <Preferences.h>
+
 #include "display.h"
 #include "common.h"
 
@@ -10,6 +12,8 @@
 #define GLOBAL_DELAY 20
 
 #define RESET_COUNTER_VALUE 150
+
+Preferences preferences;
 
 int counter = 0;
 int resetCounter = 0;
@@ -23,6 +27,8 @@ void setup() {
     Serial.begin(115200);
     while (!Serial) { ; }
     delay(1000);
+
+    preferences.begin("counter-app", false);
     
     pinMode(LED, OUTPUT);
 
@@ -35,6 +41,8 @@ void setup() {
     displayInit();
     displayShowBootScreen();
     delay(2000);
+
+    counter = preferences.getInt("counter_val", counter);
     
     // Show initial counter screen.
     showCounter(counter);
@@ -49,6 +57,7 @@ void loop() {
         counter++;
         digitalWrite(LED, HIGH);
         showCounter(counter);
+        preferences.putInt("counter_val", counter);
     }
     else if (lastYelButtonState == LOW && currentYelButtonState == HIGH) {
         digitalWrite(LED, LOW);
@@ -59,6 +68,7 @@ void loop() {
         counter--;
         digitalWrite(LED, HIGH);
         showCounter(counter);
+        preferences.putInt("counter_val", counter);
     }
     else if (lastRedButtonState == LOW && currentRedButtonState == HIGH) {
         digitalWrite(LED, LOW);
@@ -76,6 +86,7 @@ void loop() {
         counter = 0;
         resetCounter = 0;
         showCounter(counter);
+        preferences.putInt("counter_val", counter);
     }
     
     lastYelButtonState = currentYelButtonState;
