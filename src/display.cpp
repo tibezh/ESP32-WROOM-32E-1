@@ -31,12 +31,12 @@ void displayShowBootScreen() {
     u8g2.drawBox(0, 0, 128, 20);
     u8g2.setDrawColor(0);
     u8g2.setFont(u8g2_font_ncenB10_tr);
-    u8g2.drawStr(25, 14, "ESP32 BOOT");
+    u8g2.drawStr(18, 14, "ESP32 BOOT");
     u8g2.setDrawColor(1);
     
     // Loading text.
     u8g2.setFont(u8g2_font_ncenB08_tr);
-    u8g2.drawStr(20, 40, "Loading...");
+    u8g2.drawStr(28, 44, "Loading...");
     
     displayUpdate();
 }

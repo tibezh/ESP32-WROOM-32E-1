@@ -6,7 +6,7 @@
 #define LED 2
 #define BUTTON 4
 #define GLOBAL_DELAY 20
-#define RESET_COUNTER_VALUE 60
+#define RESET_COUNTER_VALUE 150
 
 int counter = 0;
 int resetCounter = 0;
